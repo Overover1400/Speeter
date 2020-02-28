@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 func main() {
 	// Create an HTTP server that listens on port 8000
@@ -23,6 +26,18 @@ func main() {
 	//	}
 	//}))
 
-	fmt.Println((400 * 10) / 400)
+	//fmt.Println((400 * 10) / 400)
+//s:=sha256.Sum256([]byte("hi"))
+//var slicc []string
+//for _,v :=range s {
+//	if string(v)!= "" {
+//		slicc = append(slicc, string(v))
+//	}
+//
+//}
+//	fmt.Println(slicc)
+
+
+fmt.Println("ss "+os.Getenv("DB_USERNAME"))
 
 }

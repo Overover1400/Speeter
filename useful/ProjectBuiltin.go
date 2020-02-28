@@ -3,7 +3,11 @@ package useful
 import (
 	"bytes"
 	"cons"
+	"database/sql"
+	_"github.com/go-sql-driver/mysql"
 	"fmt"
+	"html/template"
+	"interfaces"
 	"io"
 	"math/rand"
 	"net/http"
@@ -43,14 +47,14 @@ func UploadAudio(req *http.Request, inputMainMusic string) string {
 	fh.Filename = strings.ReplaceAll(fh.Filename, " ", "")
 
 	if fh.Size <= 30000000 {
-		audioExtetnion := fh.Header.Get("Content-Type")
+		audioExtesnion := fh.Header.Get("Content-Type")
 
-		legalExtension := []string{"audio/mp3", "audio/aac", "audio/wma", "audio/flac", "audio/wav", "audio/aiff"}
+		legalExtensions := []string{"audio/mp3", "audio/aac", "audio/wma", "audio/flac", "audio/wav", "audio/aiff"}
 
 		//TODO 2
 		//extention :=FindAudioFormat(inputMainMusic+fh.Filename)
 
-		if HasElement(legalExtension, audioExtetnion) {
+		if HasElement(legalExtensions, audioExtesnion) {
 
 			//create sha for file name
 			//ext := strings.Split(fh.Filename, ".")[1]
@@ -78,6 +82,7 @@ func UploadAudio(req *http.Request, inputMainMusic string) string {
 			if err != nil {
 				fmt.Println(err)
 			}
+			fmt.Println("upload is succesfull")
 			return fh.Filename
 		}
 		return cons.R_EXTENTION_NOT_ALLOWED
@@ -233,6 +238,8 @@ func SpecifyAudioTimeDuration(audioPath string) int {
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println("time duration is succesfully : ",minuteToInt*60+secondToInt)
+
 	return minuteToInt*60 + secondToInt
 }
 
@@ -273,4 +280,54 @@ func HasElement(array []string, elm string) bool {
 		}
 	}
 	return false
+}
+
+func OpenDatabases() (db *sql.DB, err error) {
+
+	dbUserName :=/*os.Getenv("hamed")*/"hamed"
+	dbUserPass :=`*7yH09hamed125&^mn7!`
+	dbDatabases := `spleeter`
+	addressIp :=`194.5.175.118`
+	port := `3306`
+
+	os.Getenv(".env")
+	dbUrl :=fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&collation=utf8mb4_unicode_ci",dbUserName,dbUserPass,
+		addressIp,port,dbDatabases)
+	db,err=sql.Open("mysql",dbUrl)
+	if err != nil {
+	fmt.Println(err)
+	return
+	}
+
+	err=db.Ping()
+	if err != nil {
+	fmt.Println(err)
+	return
+	}
+
+return
+}
+
+func HandleCloseableErrorClient(value interfaces.CloseAllDb, fileName string, lineNumber int) {
+	//ClientPrintErr("BuiltinHelpersOrigin.go", 1199, fileName," ",lineNumber," ",value)
+	if value == nil {
+		return
+	}
+	err := value.Close()
+	if err != nil {
+		fmt.Println()
+		//ClientPrintErr(fileName, lineNumber, err)
+	}
+}
+
+func ParsHtmFiles(res http.ResponseWriter, htmlFileName string,data struct{}) {
+	templates,err:=template.ParseFiles(cons.HTLM_FOLDER+ htmlFileName+".html")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err=templates.ExecuteTemplate(res,htmlFileName+".html", data)
+	if err != nil {
+		fmt.Println(err)
+	}
 }

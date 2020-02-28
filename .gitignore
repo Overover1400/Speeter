@@ -1,4 +1,8 @@
 src*
 html/
 pretrained_models/
-
+ZarinPalTest/
+brokenFiles/
+github.com/
+golang.org/
+test/
