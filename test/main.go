@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 )
 
 func main() {
@@ -27,17 +26,57 @@ func main() {
 	//}))
 
 	//fmt.Println((400 * 10) / 400)
-//s:=sha256.Sum256([]byte("hi"))
-//var slicc []string
-//for _,v :=range s {
-//	if string(v)!= "" {
-//		slicc = append(slicc, string(v))
-//	}
-//
-//}
-//	fmt.Println(slicc)
+	//s:=sha256.Sum256([]byte("hi"))
+	//var slicc []string
+	//for _,v :=range s {
+	//	if string(v)!= "" {
+	//		slicc = append(slicc, string(v))
+	//	}
+	//
+	//}
+	//	fmt.Println(slicc)
 
+	//fmt.Println("ss "+os.Getenv("DB_USERNAME"))
 
-fmt.Println("ss "+os.Getenv("DB_USERNAME"))
+	//res,err:=http.Get("https://pouland.ir/login/?username=ha'med';&password=123#")
+	//if err != nil {
+	//fmt.Println("err : ",err)
+	//}
+	//
+	//io,err:=ioutil.ReadAll(res.Request.Form)
+	//if err != nil {
+	//fmt.Println(err)
+	//}
 
+	//fmt.Println(string(io))
+	//fmt.Println(res.Request.Form)
+	//fmt.Println(res.Request.Body)
+	//fmt.Println("-----------",res.Header)
+
+	//fmt.Println(string(""))
+	//
+	//	fmt.Println("frist -----",os.Getenv("CONDA_DEFAULT_ENV"))
+	//
+	//
+	//	fmt.Println("aaa",err)
+	//
+	//	fmt.Println("second ----- ",os.Getenv("CONDA_DEFAULT_ENV"))
+	//
+	//	err=useful.Spleeter(cons.MAIN_MUSIC_PATH+"audio_example.mp3", cons.OUT_PUT_SPLEETER_PATH,"5stems ","","")
+	//	fmt.Println("out error  ",err)
+
+	str := `audio_example.msdasjkuiodp3`
+	var sv = true
+	var j = 1
+	for i := 1; i < len(str); i++ {
+
+		if string(str[len(str)-i]) != `.` && sv {
+			j++
+		}
+		if string(str[len(str)-i]) == `.` {
+			sv = false
+		}
+
+	}
+	fmt.Println(str[:len(str)-j])
 }

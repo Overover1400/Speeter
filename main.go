@@ -1,7 +1,5 @@
 package main
 
-// +build ignore
-
 import (
 	"C"
 	"MainProcess"
@@ -13,16 +11,15 @@ import (
 func main() {
 	fmt.Println("Start Main! ")
 
-	http.HandleFunc("/main", MainProcess.RootHandler)          // sets router
-	http.HandleFunc("/resultForAll", MainProcess.ResultForAll) // sets router
-	http.HandleFunc("/singUp", MainProcess.SingUp)             // sets router
-	http.HandleFunc("/register", MainProcess.Register)         // sets router
-	http.HandleFunc("/loginPage", MainProcess.LoginPage)       // sets router
+	http.HandleFunc("/main", MainProcess.RootHandler)               // sets router
+	http.HandleFunc("/resultForAll", MainProcess.ProccessForSpleet) // sets router
+	http.HandleFunc("/singUp", MainProcess.SingUp)                  // sets router
+	http.HandleFunc("/register", MainProcess.Register)              // sets router
+	http.HandleFunc("/loginPage", MainProcess.LoginPage)            // sets router
 	http.HandleFunc("/myFiles", MainProcess.MyFiles)
 	http.HandleFunc("/reqForBuy", MainProcess.ReqForBuy)
-	http.HandleFunc("/cookies", MainProcess.Cookies)
-	//http.HandleFunc("/pay", Payment)
-
+	http.HandleFunc("/UploadForPay", MainProcess.UploadForPay)
+	http.HandleFunc("/y", Y)
 	// sets router
 	http.Handle("/", http.FileServer(http.Dir("/home/hamed/Spleeter/src/html/")))
 	//http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("/home/hamed/Spleeter/src/html/"))))
@@ -58,5 +55,14 @@ func Payment(res http.ResponseWriter, req *http.Request) {
 }
 
 func Payed(res http.ResponseWriter, req *http.Request)  {
+
+}
+
+func Y(res http.ResponseWriter,req *http.Request)  {
+
+
+	for _,cookie:=range req.Cookies(){
+		fmt.Println(cookie.Value)
+	}
 
 }

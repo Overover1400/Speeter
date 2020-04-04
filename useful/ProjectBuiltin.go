@@ -4,17 +4,15 @@ import (
 	"bytes"
 	"cons"
 	"database/sql"
-	_"github.com/go-sql-driver/mysql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"html/template"
 	"interfaces"
 	"io"
 	"math/rand"
 	"net/http"
-	"net/url"
 	"os"
 	"os/exec"
-	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -35,7 +33,7 @@ func ShellOut(command string) (error, string, string) {
 	return err, stdout.String(), stderr.String()
 }
 
-func UploadAudio(req *http.Request, inputMainMusic string) string {
+func UploadAudio(req *http.Request, inputMainMusic string,privet bool) (string,string) {
 
 	mf, fh, err := req.FormFile("file")
 	defer mf.Close()
@@ -55,27 +53,16 @@ func UploadAudio(req *http.Request, inputMainMusic string) string {
 		//extention :=FindAudioFormat(inputMainMusic+fh.Filename)
 
 		if HasElement(legalExtensions, audioExtesnion) {
+			if privet {
+				err = os.MkdirAll(inputMainMusic, os.ModePerm)
 
-			//create sha for file name
-			//ext := strings.Split(fh.Filename, ".")[1]
-			//h := sha1.New()
-			//_,err=io.Copy(h, mf)
-			//if err != nil {
-			//	fmt.Println(err)
-			//}
-			//	fname := fmt.Sprintf("%x", h.Sum(nil)) + "." + ext
-			//fmt.Println(fname)
-
-			//u, _ := url.Parse("/home/hamed/music/")
-			//u, _ := url.Parse("/home/hamed/tmusic/")
-			u, _ := url.Parse(inputMainMusic)
-			u.Path = path.Join(u.Path, fh.Filename)
-			//fmt.Println("main (537):::", fh.Size)
-			//fmt.Println("main (537):::", u.Path)
-			s := u.String()
-			nf, err := os.Create(s)
+				if err != nil {
+					fmt.Println(err)
+				}
+			}
+			nf, err := os.Create(inputMainMusic+fh.Filename)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Println(err,"--",inputMainMusic+fh.Filename)
 			}
 			//mf.Seek(0, 0)
 			_, err = io.Copy(nf, mf)
@@ -83,11 +70,11 @@ func UploadAudio(req *http.Request, inputMainMusic string) string {
 				fmt.Println(err)
 			}
 			fmt.Println("upload is succesfull")
-			return fh.Filename
+			return fh.Filename,inputMainMusic+fh.Filename
 		}
-		return cons.R_EXTENTION_NOT_ALLOWED
+		return cons.R_EXTENTION_NOT_ALLOWED,""
 	}
-	return cons.R_SIZE_IS_BIG
+	return cons.R_SIZE_IS_BIG,""
 }
 
 //-- Split audio to parts
@@ -115,10 +102,23 @@ func SplitAudio(outPutPath, musicName, inputPath string, separateTime int) (stri
 
 //-- Get Spleeter of python library for split audios to vocal, base , etc... proposes
 func Spleeter(inputPath, outputPath, stemsKind, timeDuration, offSet string) error{
-	command := `spleeter separate -i ` + inputPath + ` -p spleeter:` + stemsKind +
+	//command :=`conda activate spleeter`
+	//
+	//err,_,_:=ShellOut(command)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+
+	//err:=os.Setenv("CONDA_DEFAULT_ENV","spleeter")
+	//
+	//if err != nil {
+	//fmt.Println(err)
+	//}
+
+	command2 := `spleeter separate -i ` + inputPath + ` -p spleeter:` + stemsKind +
 		`-o ` + outputPath /*+ ` -s ` + offSet + ` -d ` + timeDuration*/
-	err, _, _ := ShellOut(command)
-	//fmt.Println(cmd.Stdout, cmd.Stderr)
+	err, _, _:= ShellOut(command2)
+	fmt.Println(command2)
 
 	if err != nil {
 		fmt.Println(err)
@@ -136,7 +136,7 @@ func AttachAudio() {
 	}
 
 	splitSeparatedMusicsToArray := strings.Split(a, "\n")
-
+fmt.Println("111.222",splitSeparatedMusicsToArray)
 	var typeOfOutputBass []string
 	var typeOfOutputDrums []string
 	var typeOfOutputOther []string
@@ -216,7 +216,7 @@ func AttachAudio() {
 			fmt.Println(err)
 		}
 	}
-
+fmt.Println("222",err)
 }
 
 //-- This function responsible for find out duration of audio time (second)
@@ -285,9 +285,9 @@ func HasElement(array []string, elm string) bool {
 func OpenDatabases() (db *sql.DB, err error) {
 
 	dbUserName :=/*os.Getenv("hamed")*/"hamed"
-	dbUserPass :=`*7yH09hamed125&^mn7!`
+	dbUserPass :=`*7yH09&^mn7!`
 	dbDatabases := `spleeter`
-	addressIp :=`194.5.175.118`
+	addressIp :=`194.5.195.203`
 	port := `3306`
 
 	os.Getenv(".env")
@@ -320,14 +320,30 @@ func HandleCloseableErrorClient(value interfaces.CloseAllDb, fileName string, li
 	}
 }
 
-func ParsHtmFiles(res http.ResponseWriter, htmlFileName string,data struct{}) {
+func ParsHtmFiles(res http.ResponseWriter, htmlFileName string,data interface{}) {
 	templates,err:=template.ParseFiles(cons.HTLM_FOLDER+ htmlFileName+".html")
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	err=templates.ExecuteTemplate(res,htmlFileName+".html", data)
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+
+func RemoveExtention(str string)string {
+	var sv = true
+	var j = 1
+	for i := 1; i < len(str); i++ {
+
+		if string(str[len(str)-i]) != `.` && sv {
+			j++
+		}
+		if string(str[len(str)-i]) == `.` {
+			sv = false
+		}
+
+	}
+	return str[:len(str)-j]
 }
