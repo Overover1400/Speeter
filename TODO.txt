@@ -2,3 +2,7 @@
 در قسمت اپلود از اسم فرمت رو تشخیص میدیم که باید موزیک ولیدیت بشه بعد ازش پول اوت کنیم فرمت رو
 
 2- set crons for delete temporary musics and also musics that remainds 2-3 days ago
+
+3- build alarm html page for errors
+
+4- fix security of project like injections and limit requests also limit and block ips that tryed a lot password 
