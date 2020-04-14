@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"useful"
 )
 
 func main() {
@@ -26,9 +27,9 @@ func main() {
 	//}))
 
 	//fmt.Println((400 * 10) / 400)
-	//s:=sha256.Sum256([]byte("hi"))
+	//alphabet:=sha256.Sum256([]byte("hi"))
 	//var slicc []string
-	//for _,v :=range s {
+	//for _,v :=range alphabet {
 	//	if string(v)!= "" {
 	//		slicc = append(slicc, string(v))
 	//	}
@@ -65,18 +66,42 @@ func main() {
 	//	err=useful.Spleeter(cons.MAIN_MUSIC_PATH+"audio_example.mp3", cons.OUT_PUT_SPLEETER_PATH,"5stems ","","")
 	//	fmt.Println("out error  ",err)
 
-	str := `audio_example.msdasjkuiodp3`
-	var sv = true
-	var j = 1
-	for i := 1; i < len(str); i++ {
+	//str := `audio_example.msdasjkuiodp3`
+	//var sv = true
+	//var j = 1
+	//for i := 1; i < len(str); i++ {
+	//
+	//	if string(str[len(str)-i]) != `.` && sv {
+	//		j++
+	//	}
+	//	if string(str[len(str)-i]) == `.` {
+	//		sv = false
+	//	}
+	//
+	//}
+	//fmt.Println(str[:len(str)-j])
+	//fmt.Println(useful.RandomString(20))
+//os.Chmod("/etc/hosts",os.``)
+//	err:=ioutil.WriteFile("/etc/hosts", []byte("helloo"), os.ModeExclusive)
+//
+//	fmt.Println(err)
+//	e,err:=os.Stat("/etc/hosts")
+//	fmt.Println(e.Mode(),err)
 
-		if string(str[len(str)-i]) != `.` && sv {
-			j++
-		}
-		if string(str[len(str)-i]) == `.` {
-			sv = false
-		}
+//f:=`/home/hamed.txt`
+f:=`nano /etc/hosts`
+//file,err:=os.OpenFile(f,os.O_WRONLY,os.ModePerm)
+//fmt.Println(err)
+//	reader,err:=ioutil.ReadAll(file)
+//fmt.Println(string(reader),err)
+//
+//	writer,err :=file.WriteAt([]byte("chetory"),10)
+//	fmt.Println(writer,err)
 
-	}
-	fmt.Println(str[:len(str)-j])
+
+err,r,_:=useful.ShellOut(f)
+fmt.Println(err,r)
+
 }
+
+

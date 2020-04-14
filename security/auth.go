@@ -23,7 +23,7 @@ func CheckUserAuth(req *http.Request) {
 }
 
 //-- Check User Cookies
-func CheckCookies(req *http.Request, res http.ResponseWriter) (error, bool) {
+func CheckCookies(req *http.Request, res http.ResponseWriter) (error, bool,string) {
 	if len(req.Cookies()) != 0 {
 		reqCookies := req.Cookies()[0].Value
 
@@ -31,19 +31,19 @@ func CheckCookies(req *http.Request, res http.ResponseWriter) (error, bool) {
 		defer useful.HandleCloseableErrorClient(db, "MainNeededFile.go", 197)
 		if err != nil {
 			fmt.Println(err)
-			return err, false
+			return err, false,""
 		}
 
-		err, dbCookies := mysql.SelectUserCookies(reqCookies, db)
+		err, dbCookies,userId := mysql.SelectUserCookies(reqCookies, db)
 		if err != nil {
 			fmt.Println(err)
-			return err, false
+			return err, false,""
 		}
 
 		if dbCookies == reqCookies {
-			return nil, true
+			return nil, true,userId
 		}
 	}
-	return nil, false
+	return nil, false,""
 }
 
