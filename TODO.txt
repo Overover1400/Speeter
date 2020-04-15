@@ -8,3 +8,5 @@
 4- fix security of project like injections and limit requests also limit and block ips that tried a lot password 
 
 5- Already it;s support mp3 only which should support 4-5 formats so fix it
+
+6- Log all errors
